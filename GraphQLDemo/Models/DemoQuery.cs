@@ -6,16 +6,13 @@ namespace GraphQLDemo.Models
 {
     public class DemoQuery : ObjectGraphType
     {
-        private readonly ITeacherService _teacherService;
-        private readonly ILessonPlanService _lessonPlanService;
-
-        public DemoQuery(ITeacherService teacherService, ILessonPlanService lessonPlanService)
+        public DemoQuery(IEmpInfoService empInfoService,
+                         ITeacherService teacherService,
+                         ILessonPlanService lessonPlanService)
         {
-            _teacherService = teacherService;
-            _lessonPlanService = lessonPlanService;
-
-            Field<TeacherType>("teacher", "根据HrCode查询老师信息", _teacherService.GetArguments(), context => _teacherService.GetResolvers(context));
-            Field<LessonPlanType>("lessonPlan", "查询教案", _lessonPlanService.GetArguments(), context => _lessonPlanService.GetResolvers(context));
+            Field<ListGraphType<EmpInfoType>>("newEmployees", "当日新入职员工", null, context => empInfoService.GetResolvers(context));
+            Field<TeacherType>("teacher", "根据HrCode查询老师信息", teacherService.GetArguments(), context => teacherService.GetResolvers(context));
+            Field<ListGraphType<LessonPlanType>>("lessonPlan", "查询教案", lessonPlanService.GetArguments(), context => lessonPlanService.GetResolvers(context));
         }
     }
 }

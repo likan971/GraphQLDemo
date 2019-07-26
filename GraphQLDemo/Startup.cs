@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
+using GraphQLDemo.Extensions;
 using GraphQLDemo.Models;
 using GraphQLDemo.Repositories;
 using GraphQLDemo.Services;
@@ -43,10 +44,9 @@ namespace GraphQLDemo
             .AddGraphTypes(ServiceLifetime.Scoped);
 
             services.AddDbContext<PcpDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("pcp")));
-            services.AddTransient<ITeacherRepository, TeacherRepository>();
-            services.AddTransient<ILessonPlanRepository, LessonPlanRepository>();
-            services.AddTransient<ITeacherService, TeacherService>();
-            services.AddTransient<ILessonPlanService, LessonPlanService>();
+            services.AddDbContext<BpfDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("bpf")));
+            services.RegisterTypesInAssembly(type => type.Name.EndsWith("Service"), new[] { typeof(IService).Assembly }, ServiceLifetime.Scoped);
+            services.RegisterTypesInAssembly(type => type.Name.EndsWith("Repository"), new[] { typeof(IRepository<>).Assembly }, ServiceLifetime.Scoped);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

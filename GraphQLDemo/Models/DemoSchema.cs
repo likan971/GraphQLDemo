@@ -8,6 +8,7 @@ namespace GraphQLDemo.Models
         public DemoSchema(IDependencyResolver resolver) : base(resolver)
         {
             Query = resolver.Resolve<DemoQuery>();
+            Mutation = resolver.Resolve<DemoMutation>();
         }
     }
 }

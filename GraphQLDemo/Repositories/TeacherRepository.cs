@@ -8,7 +8,7 @@ namespace GraphQLDemo.Repositories
 {
     public interface ITeacherRepository : IRepository<Teacher>
     {
-
+        string GetUserIdByHrCode(string hrCode);
     }
 
     public class TeacherRepository : ITeacherRepository
@@ -28,6 +28,13 @@ namespace GraphQLDemo.Repositories
         public IQueryable<Teacher> GetIncludableQuery()
         {
             throw new NotSupportedException();
+        }
+
+        public string GetUserIdByHrCode(string hrCode)
+        {
+            return GetQuery().Where(t => t.HrCode == hrCode)
+                             .Select(t => t.UserId)
+                             .FirstOrDefault();
         }
     }
 }
